@@ -1,0 +1,30 @@
+version: "3.7"
+services:
+  backdb:
+    image: postgres
+    restart: always
+    ports: 
+      - 5432:5432
+    environment:
+        POSTGRES_USER: ${POSTGRES_USR}
+        POSTGRES_PASSWORD: ${POSTGRES_PWD}
+        POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  web-server:
+    build: ./
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/app
+    depends_on:
+      - backdb
+    environment:
+        POSTGRES_USER: ${POSTGRES_USR}
+        POSTGRES_PASSWORD: ${POSTGRES_PWD}
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_HOST: ${POSTGRES_HOST}
+        GETGROUPUSER: ${GETGROUPUSER}
+        GETGROUPWD: ${GETGROUPWD}
+        USERADMIN: ${USERADMIN}
+        USERADMINPWD: ${USERADMINPWD}

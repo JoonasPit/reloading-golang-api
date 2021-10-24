@@ -1,0 +1,15 @@
+[build]
+cmd = "go build -o ./tmp/app ."
+bin = "tmp/app"
+log = "air_errors.log"
+# Watch these filename extensions.
+#include_ext = ["go", "yaml", "yml"]
+# Ignore these filename extensions or directories.
+exclude_dir = ["tmp", "data"]
+delay = 1000 # ms
+
+[log]
+time = true
+
+[misc]
+clean_on_exit = true
