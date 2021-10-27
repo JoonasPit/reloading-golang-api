@@ -51,6 +51,10 @@ type StockOutPut struct {
 	TimeZs map[string]StockAttributes `json:"Attributes I guess"`
 }
 
+type ErrorResponse struct {
+	ErrorMessage string `json:"Error Message"`
+}
+
 func ReMap(stock Stock) StockNew {
 	newStock := StockNew{
 		NewMeta: struct {
