@@ -1,0 +1,17 @@
+:root{
+    --myfont: 'Roboto Mono', monospace;
+}
+body {
+    background-color: white;
+  }
+.background{
+    width: 100%;
+}
+.headerclass {
+    margin: 0 auto;
+    font-family: var(--myfont);
+    position: relative;
+    text-align: center;
+    font-size: x-large;
+    color: black;
+}

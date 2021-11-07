@@ -33,8 +33,17 @@ type StockResponse struct {
 }
 
 func Index(c *gin.Context) {
-	c.IndentedJSON(200, gin.H{"message": "gopher hello"})
+	c.HTML(http.StatusOK, "homepage.html", gin.H{"title": "Some Title"})
 }
+
+func Search(c *gin.Context) {
+	c.HTML(http.StatusOK, "searchpage.html", nil)
+}
+
+func HelloAdmin(c *gin.Context) {
+	c.IndentedJSON(http.StatusOK, gin.H{"code": http.StatusOK, "message": fmt.Sprintf("hello %s", os.Getenv("USERADMIN"))})
+}
+
 func ReplaceSQL(old, searchPattern string) string {
 	tmpCount := strings.Count(old, searchPattern)
 	for m := 1; m <= tmpCount; m++ {
@@ -84,7 +93,7 @@ func sendRequest(stockToFetch string, c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"code": http.StatusInternalServerError, "message": "Something went wrong..."})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, gin.H{"code": http.StatusOK, "message": "Successful fetch & insert"})
+	c.IndentedJSON(http.StatusOK, gin.H{"code": http.StatusOK, "message": "Successful fetch and insert"})
 }
 
 func dbinsert(stock datahelpers.StockNew) (pq.ErrorCode, error) {
@@ -125,7 +134,6 @@ func TruncTable(c *gin.Context) {
 }
 
 func GetStockByName(c *gin.Context) {
-	fmt.Println("I'm here")
 	stockSymbol, ok := c.GetQuery("stockSymbol")
 	if !ok {
 		c.IndentedJSON(401, gin.H{"message": "give me a param"})
@@ -193,8 +201,4 @@ func GetAllStocks(c *gin.Context) {
 		stockList = append(stockList, fetchedStock)
 	}
 	c.IndentedJSON(http.StatusOK, gin.H{"code": http.StatusOK, "stockList": stockList})
-}
-
-func HelloAdmin(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, gin.H{"code": http.StatusOK, "message": fmt.Sprintf("hello %s", os.Getenv("USERADMIN"))})
 }
