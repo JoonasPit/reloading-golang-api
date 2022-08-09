@@ -1,5 +1,5 @@
 [build]
-cmd = "go build -o ./tmp/app ."
+cmd = "go build -buildvcs=false -o ./tmp/app ."
 bin = "tmp/app"
 log = "air_errors.log"
 # Watch these filename extensions.
