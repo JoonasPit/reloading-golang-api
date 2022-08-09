@@ -16,14 +16,14 @@ func main() {
 	router.Static("./css", "./css")
 	router.Static("./js", "./js")
 	router.GET("/", controllers.Index)
-	getRoutergroup := router.Group("/get", gin.BasicAuth(gin.Accounts{
-		os.Getenv("GETGROUPUSER"): os.Getenv("GETGROUPWD"),
-	}))
+	//getRoutergroup := router.Group("/get", gin.BasicAuth(gin.Accounts{
+	//	os.Getenv("GETGROUPUSER"): os.Getenv("GETGROUPWD"),
+	//}))
 	adminGroup := router.Group("/admin", gin.BasicAuth(gin.Accounts{
 		os.Getenv("USERADMIN"): os.Getenv("USERADMINPWD"),
 	}))
-	getRoutergroup.GET("/by-stocksymbol", controllers.GetStockByName)
-	getRoutergroup.GET("/allstocks", controllers.GetAllStocks)
+	router.GET("/by-stocksymbol", controllers.GetStockByName)
+	router.GET("/allstocks", controllers.GetAllStocks)
 	adminGroup.GET("", controllers.HelloAdmin)
 	router.GET("/fetch", controllers.FetchAndParseStockData)
 	router.GET("/search", controllers.Search)

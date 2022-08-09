@@ -45,9 +45,12 @@ func HelloAdmin(c *gin.Context) {
 }
 
 func ReplaceSQL(old, searchPattern string) string {
+	fmt.Println("Here")
 	tmpCount := strings.Count(old, searchPattern)
+	fmt.Println(tmpCount)
 	for m := 1; m <= tmpCount; m++ {
 		old = strings.Replace(old, searchPattern, "$"+strconv.Itoa(m), 1)
+		fmt.Println(old)
 	}
 	return old
 }
@@ -58,7 +61,7 @@ func FetchAndParseStockData(c *gin.Context) {
 
 func sendRequest(stockToFetch string, c *gin.Context) {
 	var stock datahelpers.Stock
-	sendString := fmt.Sprintf("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&apikey=%s", stockToFetch, os.Getenv("STOCK_API_KEY"))
+	sendString := fmt.Sprintf("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=%s&apikey=%s", stockToFetch, os.Getenv("STOCK_API_KEY"))
 	resp, err := http.Get(sendString)
 	if err != nil || resp.StatusCode != 200 {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"code": http.StatusNotFound, "message": "Stock fetch failed"})
@@ -111,16 +114,25 @@ func dbinsert(stock datahelpers.StockNew) (pq.ErrorCode, error) {
 		return "", errors
 	}
 	vals := []interface{}{}
-	secondQuery := fmt.Sprintf("INSERT INTO %s(%s,%s,%s,%s,%s,%s) VALUES ", "STOCK_VALUE_TABLE", "stock_date", "stock_symbol_id", "stock_open", "stock_high", "stock_low", "stock_close")
+	secondQuery := fmt.Sprintf("INSERT INTO %s(%s,%s,%s,%s,%s,%s) VALUES", "STOCK_VALUE_TABLE", "stock_date", "stock_symbol_id", "stock_open", "stock_high", "stock_low", "stock_close")
+	fmt.Println(secondQuery)
+	fmt.Println(stock)
 	for key := range stock.NewTime {
+		fmt.Println("YOOOYOOY")
 		secondQuery += "(?, ?, ?, ?, ?, ?),"
-		//fmt.Println(key, remappedData.NewTime[key].Open, remappedData.NewTime[key].High, remappedData.NewTime[key].Low, remappedData.NewTime[key].Close)
+		fmt.Println(secondQuery)
+		fmt.Println(key, stock.NewTime[key].Open, stock.NewTime[key].High, stock.NewTime[key].Low, stock.NewTime[key].Close)
 		vals = append(vals, key, stockId, stock.NewTime[key].Open, stock.NewTime[key].High, stock.NewTime[key].Low, stock.NewTime[key].Close)
+	}
+	for i := range vals {
+		fmt.Println(i)
 	}
 	secondQuery = strings.TrimSuffix(secondQuery, ",")
 	secondQuery = ReplaceSQL(secondQuery, "?")
+
 	stmt, _ := db.Prepare(secondQuery)
 	res, err := stmt.Exec(vals...)
+	fmt.Println(err)
 	if err != nil {
 		return "", err
 	}
@@ -155,7 +167,8 @@ func GetStockByName(c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{"code": http.StatusInternalServerError, "message": "Something went wrong"})
 		return
 	}
-	c.IndentedJSON(200, gin.H{"info": stockResponse, "stockValues": response})
+	c.HTML(http.StatusOK, "results.html", gin.H{"title": "Result Page", "data": response})
+	//c.IndentedJSON(200, gin.H{"info": stockResponse, "stockValues": response})
 
 }
 

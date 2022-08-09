@@ -11,3 +11,7 @@ function searchFunction(){
     
     window.location.replace(fullstring)
 }
+function fooFunction(){
+   var foo = document.getElementById("title").value
+   console.log(foo)
+}

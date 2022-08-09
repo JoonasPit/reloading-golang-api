@@ -1,19 +1,23 @@
 
 <head>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet"> 
 <script type="text/javascript" src="/js/frontpage.js"></script>
-  </head> 
+</head> 
 <div class="background">
-  <div class="headerclass">
-    <h1>Stock App</h1>
+<div class="headerclass">
+  <h1>{{ .title }}</h1>
+  <!--{{ range .data}}
+    {{.}}
+  {{end}}-->
 
 <div class="stockapplication">
-    <input placeholder="Stock ticker to search" id="stockSymbol"></input> 
-    <button onclick="searchFunction()">Submit</button>
+
+  <button onclick="fooFunction()">Submit</button>
+
 </div>
 </div>
 </div>
-  
+
